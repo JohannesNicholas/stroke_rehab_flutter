@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stroke_rehab/SettingsPage.dart';
+import 'SettingsPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Stroke Rehab',
       theme: ThemeData.dark().copyWith(
-        colorScheme: const ColorScheme.light().copyWith(primary: Colors.orange),
+        colorScheme: ColorScheme.light().copyWith(primary: Colors.orange),
       ),
       home: const MyHomePage(title: 'Stroke Rehab Home'),
     );
@@ -46,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final tabs = [
     Center(child: Text('Home')),
     Center(child: Text('History')),
-    Center(child: Text('Settings')),
+    SettingsPage(),
   ];
 
   void _incrementCounter() {
@@ -72,12 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(["Home", "History", "Settings"][_currentIndex]),
       ),
       body: tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
           BottomNavigationBarItem(
