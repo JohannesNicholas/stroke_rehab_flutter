@@ -12,8 +12,15 @@ class SettingsPage extends StatelessWidget {
     return ListView(
       children: [
         settingsSection("🙋 Personal Details"),
-        settingsOption("Name"),
+        settingsOption("Name", TextField()),
         settingsSection(Strings.normalGameTitle),
+        settingsOption(
+            "Name",
+            Switch(
+                value: false,
+                onChanged: (bool state) {
+                  print(state);
+                })),
         settingsSection(Strings.sliderGameTitle),
       ],
     );
@@ -26,7 +33,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Padding settingsOption(String title) {
+  Padding settingsOption(String title, Widget input) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(64, 8, 32, 8),
       child: Row(
@@ -34,7 +41,7 @@ class SettingsPage extends StatelessWidget {
           children: <Widget>[
             Expanded(child: Text(title)),
             Expanded(
-              child: TextField(),
+              child: input,
             ),
           ]),
     );
