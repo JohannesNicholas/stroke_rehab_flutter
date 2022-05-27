@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stroke_rehab/SettingsPage.dart';
-import 'SettingsPage.dart';
+import 'package:stroke_rehab/settings_page.dart';
+import 'settings_page.dart';
 
 void main() {
   runApp(const MyApp());
