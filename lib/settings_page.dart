@@ -2,11 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:stroke_rehab/strings.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  var switchState = false;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -15,11 +21,13 @@ class SettingsPage extends StatelessWidget {
         settingsOption("Name", TextField()),
         settingsSection(Strings.normalGameTitle),
         settingsOption(
-            "Name",
+            "Random Order",
             Switch(
-                value: false,
+                value: switchState,
                 onChanged: (bool state) {
-                  print(state);
+                  setState(() {
+                    switchState = state;
+                  });
                 })),
         settingsSection(Strings.sliderGameTitle),
       ],
