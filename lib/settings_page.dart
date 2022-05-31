@@ -15,7 +15,7 @@ enum Menu { itemOne, itemTwo, itemThree, itemFour }
 
 class _SettingsPageState extends State<SettingsPage> {
   var switchState = false;
-  int _selectedMenu = 5;
+  String _selectedMenu = "5";
 
   @override
   Widget build(BuildContext context) {
@@ -24,30 +24,8 @@ class _SettingsPageState extends State<SettingsPage> {
         settingsSection("🙋 Personal Details"),
         settingsOption("Name", TextField()),
         settingsSection(Strings.normalGameTitle),
-        settingsOption(
-            "Number of Reps (Goal)",
-            PopupMenuButton<int>(
-                // Callback that sets the selected popup menu item.
-                onSelected: (int item) {
-                  setState(() {
-                    _selectedMenu = item;
-                  });
-                },
-                icon: Text(_selectedMenu.toString()),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-                      const PopupMenuItem<int>(
-                        value: 0,
-                        child: Text('Item 1'),
-                      ),
-                      const PopupMenuItem<int>(
-                        value: 2,
-                        child: Text('Item 3'),
-                      ),
-                      const PopupMenuItem<int>(
-                        value: 4,
-                        child: Text('Item 4'),
-                      ),
-                    ])),
+        settingsOption("Number of Reps (Goal)",
+            dropDownSettingsOption(["No repetition goal", "3", "5", "20"])),
         settingsOption(
             "Random Order",
             Switch(
@@ -61,6 +39,20 @@ class _SettingsPageState extends State<SettingsPage> {
       ],
     );
   }
+
+  Widget dropDownSettingsOption(List<String> options) {
+    return DropdownButton<String>(
+        // Callback that sets the selected popup menu item.
+        value: _selectedMenu,
+        isExpanded: true,
+        onChanged: (value) => setState(() {
+              _selectedMenu = value ?? "5";
+            }),
+        items: options.map(buildMenuItem).toList());
+  }
+
+  DropdownMenuItem<String> buildMenuItem(String item) =>
+      DropdownMenuItem(value: item, child: Text(item));
 
   Padding settingsSection(String title) {
     return Padding(
