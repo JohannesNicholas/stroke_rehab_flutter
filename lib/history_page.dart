@@ -45,9 +45,12 @@ class _HistoryPageState extends State<HistoryPage> {
           )),
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             onOffChip(Strings.normalGameTitle),
             onOffChip(Strings.sliderGameTitle),
+            onOffChip(Strings.freePlayShort),
+            onOffChip(Strings.goalsShort),
           ],
         )
       ],

@@ -4,6 +4,9 @@ class Strings {
   static const normalGameTitle = "🌐 Normal";
   static const sliderGameTitle = "🕹️ Slider";
 
+  static const freePlayShort = "∞ Free-play";
+  static const goalsShort = "🏆 Goals";
+
   static const nameSettingsKey = "nameStringKey";
   static const normalRepsSettingsKey = "normalRepsStringKey";
   static const normalTimeSettingsKey = "normalTime";
