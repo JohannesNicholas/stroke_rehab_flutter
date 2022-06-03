@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stroke_rehab/settings_page.dart';
+import 'history_page.dart';
+import 'home_page.dart';
 import 'settings_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -52,9 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
   final tabs = [
-    Center(child: Text('Home')),
-    Center(child: Text('History')),
-    SettingsPage(),
+    const HomePage(),
+    const HistoryPage(),
+    const SettingsPage(),
   ];
 
   void _incrementCounter() {
