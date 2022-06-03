@@ -37,7 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
         settingsSection(Strings.normalGameTitle),
         settingsOption(
           "Number of Reps (Goal)",
-          dropDown(["No goal", "3", "5", "20"], Strings.normalRepsSettingsKey),
+          dropDown(
+              ["No goal", "3", "5", "10", "20"], Strings.normalRepsSettingsKey),
         ),
         settingsOption(
           "Time limit",
@@ -63,7 +64,8 @@ class _SettingsPageState extends State<SettingsPage> {
         settingsSection(Strings.sliderGameTitle),
         settingsOption(
           "Number of Reps (Goal)",
-          dropDown(["No goal", "3", "5", "20"], Strings.sliderRepsSettingsKey),
+          dropDown(
+              ["No goal", "3", "5", "10", "20"], Strings.sliderRepsSettingsKey),
         ),
         settingsOption(
           "Time limit:",

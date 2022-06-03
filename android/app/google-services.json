@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "411243022319",
+    "project_id": "kit305-95935",
+    "storage_bucket": "kit305-95935.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411243022319:android:a9078f252fdd1e888c981a",
+        "android_client_info": {
+          "package_name": "au.edu.utas.joeyn.strokerehab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411243022319-cnktkuuvv81r7lpp1k3i4plnk26p240p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWZ_F6i7H_YjFKlTMS73bZenyauLm9CpU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411243022319-cnktkuuvv81r7lpp1k3i4plnk26p240p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "411243022319-a5s4an8qq2at8nukf2k6mf0p6sb2jliv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.edu.utas.kit305.strokeRehab"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411243022319:android:dd9f92ff0d03a8198c981a",
+        "android_client_info": {
+          "package_name": "com.example.stroke_rehab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411243022319-cnktkuuvv81r7lpp1k3i4plnk26p240p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWZ_F6i7H_YjFKlTMS73bZenyauLm9CpU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411243022319-cnktkuuvv81r7lpp1k3i4plnk26p240p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "411243022319-a5s4an8qq2at8nukf2k6mf0p6sb2jliv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.edu.utas.kit305.strokeRehab"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
