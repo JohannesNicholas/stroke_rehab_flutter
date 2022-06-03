@@ -34,66 +34,81 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final docRef = db.collection("settings").doc("settings");
+    var cloudSettings = docRef.get();
+
+    return FutureBuilder(
+      future: cloudSettings,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return ListView(
+            children: [
+              settingsSection("🙋 Personal Details"),
+              settingsOption("Name", TextField()),
+              settingsSection(Strings.normalGameTitle),
+              settingsOption(
+                "Number of Reps (Goal)",
+                dropDown(["No goal", "3", "5", "10", "20"],
+                    Strings.normalRepsSettingsKey),
+              ),
+              settingsOption(
+                "Time limit",
+                dropDown(["No limit", "10", "30", "60"],
+                    Strings.normalTimeSettingsKey),
+              ),
+              settingsOption(
+                "Number of buttons",
+                dropDown(
+                    ["2", "3", "4", "5"], Strings.normalNumButtonsSettingsKey),
+              ),
+              settingsOption(
+                "Random Order",
+                switchSetting(Strings.normalRandomSettingsKey),
+              ),
+              settingsOption(
+                "Highlight next button",
+                switchSetting(Strings.normalHighlightNextSettingsKey),
+              ),
+              settingsOption(
+                "Button size",
+                dropDown(["S", "M", "L", "XL"], Strings.normalSizeSettingsKey),
+              ),
+              settingsSection(Strings.sliderGameTitle),
+              settingsOption(
+                "Number of Reps (Goal)",
+                dropDown(["No goal", "3", "5", "10", "20"],
+                    Strings.sliderRepsSettingsKey),
+              ),
+              settingsOption(
+                "Time limit:",
+                dropDown(["No limit", "10", "30", "60"],
+                    Strings.sliderTimeSettingsKey),
+              ),
+              settingsOption(
+                "Random Order",
+                switchSetting(Strings.sliderRandomSettingsKey),
+              ),
+              settingsOption(
+                "Number of notches",
+                dropDown(
+                    ["2", "3", "4", "5"], Strings.sliderNotchesSettingsKey),
+              ),
+            ],
+          );
+        }
+      },
+    );
 
     docRef.get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
-        print(data);
+        settings.forEach((key, value) {
+          settings[key] = data[key] ?? settings[key];
+        });
+        print(settings);
       },
       onError: (e) => print("Error getting document: $e"),
-    );
-
-    return ListView(
-      children: [
-        settingsSection("🙋 Personal Details"),
-        settingsOption("Name", TextField()),
-        settingsSection(Strings.normalGameTitle),
-        settingsOption(
-          "Number of Reps (Goal)",
-          dropDown(
-              ["No goal", "3", "5", "10", "20"], Strings.normalRepsSettingsKey),
-        ),
-        settingsOption(
-          "Time limit",
-          dropDown(
-              ["No limit", "10", "30", "60"], Strings.normalTimeSettingsKey),
-        ),
-        settingsOption(
-          "Number of buttons",
-          dropDown(["2", "3", "4", "5"], Strings.normalNumButtonsSettingsKey),
-        ),
-        settingsOption(
-          "Random Order",
-          switchSetting(Strings.normalRandomSettingsKey),
-        ),
-        settingsOption(
-          "Highlight next button",
-          switchSetting(Strings.normalHighlightNextSettingsKey),
-        ),
-        settingsOption(
-          "Button size",
-          dropDown(["S", "M", "L", "XL"], Strings.normalSizeSettingsKey),
-        ),
-        settingsSection(Strings.sliderGameTitle),
-        settingsOption(
-          "Number of Reps (Goal)",
-          dropDown(
-              ["No goal", "3", "5", "10", "20"], Strings.sliderRepsSettingsKey),
-        ),
-        settingsOption(
-          "Time limit:",
-          dropDown(
-              ["No limit", "10", "30", "60"], Strings.sliderTimeSettingsKey),
-        ),
-        settingsOption(
-          "Random Order",
-          switchSetting(Strings.sliderRandomSettingsKey),
-        ),
-        settingsOption(
-          "Number of notches",
-          dropDown(["2", "3", "4", "5"], Strings.sliderNotchesSettingsKey),
-        ),
-      ],
     );
   }
 
