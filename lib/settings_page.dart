@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stroke_rehab/strings.dart';
 
@@ -12,6 +13,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  var db = FirebaseFirestore.instance;
+
   var switchState = false;
 
   var settings = {
@@ -30,6 +33,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final docRef = db.collection("settings").doc("settings");
+
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        print(data);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+
     return ListView(
       children: [
         settingsSection("🙋 Personal Details"),
@@ -91,6 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
         isExpanded: true,
         onChanged: (value) => setState(() {
               settings[key] = value ?? "5";
+              save();
             }),
         items: options
             .map((String item) => DropdownMenuItem<String>(
@@ -105,6 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           settings[key] = state;
         });
+        save();
       },
       activeColor: Colors.orange,
     );
@@ -118,6 +133,15 @@ class _SettingsPageState extends State<SettingsPage> {
         style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
       ),
     );
+  }
+
+//saves settings to the database
+  void save() {
+    db
+        .collection("settings")
+        .doc("settings")
+        .set(settings)
+        .onError((e, _) => print("Error writing document: $e"));
   }
 
   Padding settingsOption(String title, Widget input) {
