@@ -42,10 +42,24 @@ class _SettingsPageState extends State<SettingsPage> {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         } else {
+          final doc = snapshot.data as DocumentSnapshot;
+          final data = doc.data() as Map<String, dynamic>;
+          settings.forEach((key, value) {
+            settings[key] = data[key] ?? settings[key];
+          });
+
           return ListView(
             children: [
               settingsSection("🙋 Personal Details"),
-              settingsOption("Name", TextField()),
+              settingsOption(
+                  "Name",
+                  TextFormField(
+                    initialValue: settings[Strings.nameSettingsKey] as String,
+                    onFieldSubmitted: (text) {
+                      settings[Strings.nameSettingsKey] = text;
+                      save();
+                    },
+                  )),
               settingsSection(Strings.normalGameTitle),
               settingsOption(
                 "Number of Reps (Goal)",
