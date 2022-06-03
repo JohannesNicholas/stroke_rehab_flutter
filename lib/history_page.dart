@@ -15,7 +15,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   var db = FirebaseFirestore.instance;
-  var value = false;
+  Map<String, bool> chipValues = {};
   @override
   Widget build(BuildContext context) {
     final docRef = db.collection("totals");
@@ -46,36 +46,22 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         Row(
           children: [
-            Chip(label: Text(Strings.normalGameTitle)),
-            OnOffChip(),
+            onOffChip(Strings.normalGameTitle),
+            onOffChip(Strings.sliderGameTitle),
           ],
         )
       ],
     );
   }
-}
 
-class OnOffChip extends StatefulWidget {
-  const OnOffChip({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<OnOffChip> createState() => _OnOffChipState();
-}
-
-class _OnOffChipState extends State<OnOffChip> {
-  var value = false;
-  @override
-  Widget build(BuildContext context) {
+  ChoiceChip onOffChip(String title) {
     return ChoiceChip(
       selectedColor: Colors.orange,
-      label: Text('test'),
-      selected: value,
+      label: Text(title),
+      selected: chipValues[title] ?? false,
       onSelected: (bool selected) {
         setState(() {
-          value = selected;
-          print(value);
+          chipValues[title] = selected;
         });
       },
     );
