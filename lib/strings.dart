@@ -15,4 +15,5 @@ class Strings {
   static const sliderTimeSettingsKey = "sliderTime";
   static const sliderRandomSettingsKey = "sliderRandom";
   static const sliderNotchesSettingsKey = "sliderNotches";
+  static const correctButtonPressesKey = "correctButtonPresses";
 }
