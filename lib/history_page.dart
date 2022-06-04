@@ -15,6 +15,10 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   var db = FirebaseFirestore.instance;
+
+  final Stream<QuerySnapshot> recordsStream =
+      FirebaseFirestore.instance.collection('Records').snapshots();
+
   Map<String, bool> chipValues = {};
   @override
   Widget build(BuildContext context) {
@@ -52,6 +56,35 @@ class _HistoryPageState extends State<HistoryPage> {
             onOffChip(Strings.freePlayShort),
             onOffChip(Strings.goalsShort),
           ],
+        ),
+        StreamBuilder<QuerySnapshot>(
+          stream: recordsStream,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading");
+            }
+
+            return Expanded(
+              child: ListView(
+                children: snapshot.data!.docs
+                    .map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                      return ListTile(
+                        title: Text(data['title'].toString()),
+                        subtitle: Text(data['reps'].toString()),
+                      );
+                    })
+                    .toList()
+                    .cast(),
+              ),
+            );
+          },
         )
       ],
     );
