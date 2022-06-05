@@ -96,13 +96,16 @@ class _HistoryPageState extends State<HistoryPage> {
                         "Nov",
                         "Dec",
                       ];
+                      final hourString = start.hour > 12
+                          ? (start.hour - 12).toString() + ' PM'
+                          : start.hour.toString() + " AM";
                       return ListTile(
                         title: Text(record.title ?? "Untitled"),
                         subtitle: Text(start.day.toString() +
                             " " +
                             months[start.month - 1] +
                             " " +
-                            start.hour.toString()),
+                            hourString),
                         trailing: Text("Test"),
                       );
                     })
