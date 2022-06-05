@@ -76,13 +76,34 @@ class _HistoryPageState extends State<HistoryPage> {
 
             return Expanded(
               child: ListView(
-                children: snapshot.data!.docs
+                children: snapshot.data!.docs.reversed
                     .map((DocumentSnapshot document) {
-                      final data = document.data() as Record;
+                      final record = document.data() as Record;
+                      final start = record.start?.toDate() ?? DateTime(0);
+                      final months = [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ];
                       return ListTile(
-                        title: Text(data.title ?? "Untitled"),
-                        subtitle:
-                            Text(data.messages?.length.toString() ?? "Unknown"),
+                        title: Text(record.title ?? "Untitled"),
+                        subtitle: Text(start.day.toString() +
+                            " " +
+                            months[start.month - 1] +
+                            " " +
+                            start.hour.toString()),
+                        trailing: Text("Test"),
                       );
                     })
                     .toList()
