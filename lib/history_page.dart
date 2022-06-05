@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:stroke_rehab/strings.dart';
 import 'firebase_options.dart';
+import 'record.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({
@@ -16,8 +17,12 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   var db = FirebaseFirestore.instance;
 
-  final Stream<QuerySnapshot> recordsStream =
-      FirebaseFirestore.instance.collection('Records').snapshots();
+  final Stream<QuerySnapshot> recordsStream = FirebaseFirestore.instance
+      .collection('Records')
+      .withConverter(
+          fromFirestore: Record.fromFirestore,
+          toFirestore: (Record record, _) => record.toFirestore())
+      .snapshots();
 
   Map<String, bool> chipValues = {};
   @override
@@ -73,11 +78,11 @@ class _HistoryPageState extends State<HistoryPage> {
               child: ListView(
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot document) {
-                      Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
+                      final data = document.data() as Record;
                       return ListTile(
-                        title: Text(data['title'].toString()),
-                        subtitle: Text(data['reps'].toString()),
+                        title: Text(data.title ?? "Untitled"),
+                        subtitle:
+                            Text(data.messages?.length.toString() ?? "Unknown"),
                       );
                     })
                     .toList()
