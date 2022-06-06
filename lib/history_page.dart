@@ -97,16 +97,40 @@ class _HistoryPageState extends State<HistoryPage> {
                         "Dec",
                       ];
                       final hourString = start.hour > 12
-                          ? (start.hour - 12).toString() + ' PM'
-                          : start.hour.toString() + " AM";
-                      return ListTile(
-                        title: Text(record.title ?? "Untitled"),
-                        subtitle: Text(start.day.toString() +
-                            " " +
-                            months[start.month - 1] +
-                            " " +
-                            hourString),
-                        trailing: Text("Test"),
+                          ? (start.hour - 12).toString() + 'PM'
+                          : start.hour.toString() + "AM";
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              record.title ?? "Untitled",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            Text(
+                              start.day.toString() +
+                                  " " +
+                                  months[start.month - 1] +
+                                  " " +
+                                  hourString,
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            Row(
+                              children: const [
+                                Text(
+                                  "x/x",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: Colors.orange,
+                                  size: 32,
+                                ),
+                              ],
+                            ),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
                       );
                     })
                     .toList()
