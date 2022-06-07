@@ -50,126 +50,155 @@ class _HistoryPageState extends State<HistoryPage> {
             toFirestore: (Record record, _) => record.toFirestore())
         .snapshots();
 
-    return Column(
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-              child: StreamBuilder<QuerySnapshot>(
-            stream: cloudTotals,
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return const Text('Something went wrong');
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("Loading");
-              }
-              var totalsDoc =
-                  snapshot.data!.docs.first.data() as Map<String, dynamic>;
-              var total = totalsDoc[Strings.correctButtonPressesKey] as int;
-              return Text(total.toString() + " correct presses in total");
-            },
-          )),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Column(
           children: [
-            onOffChip(Strings.normalGameTitle),
-            onOffChip(Strings.sliderGameTitle),
-            onOffChip(Strings.freePlayShort),
-            onOffChip(Strings.goalsShort),
-          ],
-        ),
-        StreamBuilder<QuerySnapshot>(
-          stream: recordsStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Something went wrong');
-            }
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                  child: StreamBuilder<QuerySnapshot>(
+                stream: cloudTotals,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Loading");
-            }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading");
+                  }
+                  var totalsDoc =
+                      snapshot.data!.docs.first.data() as Map<String, dynamic>;
+                  var total = totalsDoc[Strings.correctButtonPressesKey] as int;
+                  return Text(total.toString() + " correct presses in total");
+                },
+              )),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                onOffChip(Strings.normalGameTitle),
+                onOffChip(Strings.sliderGameTitle),
+                onOffChip(Strings.freePlayShort),
+                onOffChip(Strings.goalsShort),
+              ],
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: recordsStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
 
-            return Expanded(
-              child: ListView(
-                children: snapshot.data!.docs.reversed
-                    .map((DocumentSnapshot document) {
-                      final record = document.data() as Record;
-                      final start = record.start?.toDate() ?? DateTime(0);
-                      final months = [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ];
-                      final hourString = start.hour > 12
-                          ? (start.hour - 12).toString() + 'PM'
-                          : start.hour.toString() + "AM";
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                record.title ?? "Untitled",
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ),
-                            Text(
-                              start.day.toString() +
-                                  " " +
-                                  months[start.month - 1] +
-                                  " " +
-                                  hourString,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            Expanded(
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text("Loading");
+                }
+
+                return Expanded(
+                  child: ListView(
+                    children: snapshot.data!.docs.reversed
+                        .map((DocumentSnapshot document) {
+                          final record = document.data() as Record;
+                          final start = record.start?.toDate() ?? DateTime(0);
+                          final months = [
+                            "Jan",
+                            "Feb",
+                            "Mar",
+                            "Apr",
+                            "May",
+                            "Jun",
+                            "Jul",
+                            "Aug",
+                            "Sep",
+                            "Aug",
+                            "Sep",
+                            "Oct",
+                            "Nov",
+                            "Dec",
+                          ];
+                          final hourString = start.hour > 12
+                              ? (start.hour - 12).toString() + 'PM'
+                              : start.hour.toString() + "AM";
+                          return TextButton(
+                            style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                textStyle:
+                                    TextStyle(fontWeight: FontWeight.normal)),
+                            onPressed: () {
+                              //TODO: implement this
+                              print("Pressed" + hourString);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    record.reps
-                                            .toString()
-                                            .replaceAll("null", "∞") +
-                                        " x " +
-                                        record.buttonsOrNotches
-                                            .toString()
-                                            .replaceAll("null", "?"),
-                                    style: const TextStyle(fontSize: 18),
+                                  Expanded(
+                                    child: Text(
+                                      record.title ?? "Untitled",
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
                                   ),
-                                  const Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.orange,
-                                    size: 32,
+                                  Text(
+                                    start.day.toString() +
+                                        " " +
+                                        months[start.month - 1] +
+                                        " " +
+                                        hourString,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          record.reps
+                                                  .toString()
+                                                  .replaceAll("null", "∞") +
+                                              " x " +
+                                              record.buttonsOrNotches
+                                                  .toString()
+                                                  .replaceAll("null", "?"),
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                        const Icon(
+                                          Icons.chevron_right,
+                                          color: Colors.orange,
+                                          size: 32,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                               ),
                             ),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        ),
-                      );
-                    })
-                    .toList()
-                    .cast(),
-              ),
-            );
-          },
-        )
+                          );
+                        })
+                        .toList()
+                        .cast(),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: FloatingActionButton(
+              onPressed: () {
+                //TODO this
+                print("share!");
+              },
+              child: const Icon(Icons.share),
+              backgroundColor: Colors.orange,
+            ),
+          ),
+        ),
       ],
     );
   }
