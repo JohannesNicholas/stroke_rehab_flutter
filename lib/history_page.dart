@@ -103,9 +103,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
                         child: Row(
                           children: [
-                            Text(
-                              record.title ?? "Untitled",
-                              style: const TextStyle(fontSize: 18),
+                            Expanded(
+                              child: Text(
+                                record.title ?? "Untitled",
+                                style: const TextStyle(fontSize: 18),
+                              ),
                             ),
                             Text(
                               start.day.toString() +
@@ -115,18 +117,21 @@ class _HistoryPageState extends State<HistoryPage> {
                                   hourString,
                               style: const TextStyle(color: Colors.grey),
                             ),
-                            Row(
-                              children: const [
-                                Text(
-                                  "x/x",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: Colors.orange,
-                                  size: 32,
-                                ),
-                              ],
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: const [
+                                  Text(
+                                    "x/x",
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.orange,
+                                    size: 32,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
