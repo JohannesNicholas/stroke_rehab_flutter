@@ -17,18 +17,38 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   var db = FirebaseFirestore.instance;
 
-  final Stream<QuerySnapshot> recordsStream = FirebaseFirestore.instance
-      .collection('Records')
-      .withConverter(
-          fromFirestore: Record.fromFirestore,
-          toFirestore: (Record record, _) => record.toFirestore())
-      .snapshots();
-
   Map<String, bool> chipValues = {};
   @override
   Widget build(BuildContext context) {
     final docRef = db.collection("totals");
     var cloudTotals = docRef.snapshots();
+
+    Query<Map<String, dynamic>> query = db.collection("Records");
+
+    final freePlay = chipValues[Strings.freePlayShort] ?? false;
+    final goals = chipValues[Strings.goalsShort] ?? false;
+    final slider = chipValues[Strings.sliderGameTitle] ?? false;
+    final normal = chipValues[Strings.normalGameTitle] ?? false;
+
+    //filter results
+    if (freePlay && !goals) {
+      query = query.where("goals", isEqualTo: false);
+    }
+    if (goals && !freePlay) {
+      query = query.where("goals", isEqualTo: true);
+    }
+    if (slider && !normal) {
+      query = query.where("title", isEqualTo: Strings.sliderGameTitle);
+    }
+    if (normal && !slider) {
+      query = query.where("title", isEqualTo: Strings.normalGameTitle);
+    }
+
+    final recordsStream = query
+        .withConverter(
+            fromFirestore: Record.fromFirestore,
+            toFirestore: (Record record, _) => record.toFirestore())
+        .snapshots();
 
     return Column(
       children: [
@@ -120,12 +140,18 @@ class _HistoryPageState extends State<HistoryPage> {
                             Expanded(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
+                                children: [
                                   Text(
-                                    "x/x",
-                                    style: TextStyle(fontSize: 18),
+                                    record.reps
+                                            .toString()
+                                            .replaceAll("null", "∞") +
+                                        " x " +
+                                        record.buttonsOrNotches
+                                            .toString()
+                                            .replaceAll("null", "?"),
+                                    style: const TextStyle(fontSize: 18),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.chevron_right,
                                     color: Colors.orange,
                                     size: 32,
