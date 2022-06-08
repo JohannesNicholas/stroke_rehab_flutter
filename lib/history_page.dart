@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:stroke_rehab/strings.dart';
+import 'record_page.dart';
 import 'firebase_options.dart';
 import 'record.dart';
 
@@ -127,8 +128,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.normal)),
                             onPressed: () {
-                              //TODO: implement this
-                              print("Pressed" + hourString);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RecordPage(record: record)));
                             },
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(8, 8, 0, 16),
