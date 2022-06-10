@@ -64,7 +64,21 @@ class RecordPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Image.file(File(record.imagePath ?? "")),
+          Hero(
+            tag: "record_image_${record.id}",
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: (record.imagePath ?? "") != ""
+                  ? Image.file(
+                      File(
+                        record.imagePath ?? "",
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+          ),
           Column(
             children: [
               Padding(

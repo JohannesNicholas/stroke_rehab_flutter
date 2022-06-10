@@ -130,17 +130,20 @@ class _HistoryPageState extends State<HistoryPage> {
                               : start.hour.toString() + "AM";
                           return Stack(
                             children: [
-                              SizedBox(
-                                width: double.infinity,
-                                height: 72,
-                                child: (record.imagePath ?? "") != ""
-                                    ? Image.file(
-                                        File(
-                                          record.imagePath ?? "",
-                                        ),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
+                              Hero(
+                                tag: "record_image_${record.id}",
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 72,
+                                  child: (record.imagePath ?? "") != ""
+                                      ? Image.file(
+                                          File(
+                                            record.imagePath ?? "",
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
                               ),
                               TextButton(
                                 style: TextButton.styleFrom(
