@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stroke_rehab/record.dart';
 
 class RecordPage extends StatelessWidget {
@@ -170,7 +171,14 @@ class RecordPage extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: "share_button",
               onPressed: () {
-                //TODO
+                var csv = "message, date and time, correct press\n";
+                record.messages?.forEach((m) {
+                  final message = m.message;
+                  final timestamp = m.datetime?.toDate().toString();
+                  final correctButton = m.correctPress.toString();
+                  csv += "$message, $timestamp, $correctButton\n";
+                });
+                Share.share(csv);
               },
               child: const Icon(Icons.share),
               backgroundColor: Colors.orange,
