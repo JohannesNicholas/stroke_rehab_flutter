@@ -5,6 +5,7 @@ import 'package:stroke_rehab/strings.dart';
 import 'record_page.dart';
 import 'firebase_options.dart';
 import 'record.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({
@@ -139,18 +140,32 @@ class _HistoryPageState extends State<HistoryPage> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      record.title ?? "Untitled",
-                                      style: const TextStyle(fontSize: 18),
+                                    child: Hero(
+                                      tag: "record_title_${record.id}",
+                                      child: Material(
+                                        child: Text(
+                                          record.title ?? "Untitled",
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              backgroundColor:
+                                                  Colors.transparent),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Text(
-                                    start.day.toString() +
-                                        " " +
-                                        months[start.month - 1] +
-                                        " " +
-                                        hourString,
-                                    style: const TextStyle(color: Colors.grey),
+                                  Hero(
+                                    tag: "record_time_${record.id}",
+                                    child: Material(
+                                      child: Text(
+                                        start.day.toString() +
+                                            " " +
+                                            months[start.month - 1] +
+                                            " " +
+                                            hourString,
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
                                   ),
                                   Expanded(
                                     child: Row(
@@ -194,9 +209,9 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Padding(
             padding: const EdgeInsets.all(32),
             child: FloatingActionButton(
+              heroTag: "share_button",
               onPressed: () {
-                //TODO this
-                print("share!");
+                Share.share('check out my website https://example.com');
               },
               child: const Icon(Icons.share),
               backgroundColor: Colors.orange,

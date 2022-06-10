@@ -7,6 +7,7 @@ class Record {
   int? buttonsOrNotches;
   List<RecordMessage>? messages;
   bool? goals;
+  String? id;
 
   Record({
     this.title,
@@ -15,6 +16,7 @@ class Record {
     this.buttonsOrNotches,
     this.messages,
     this.goals,
+    this.id,
   });
 
   factory Record.fromFirestore(
@@ -39,6 +41,7 @@ class Record {
       buttonsOrNotches: data?['buttonsOrNotches'],
       messages: messagesAsRecords,
       goals: data?['goals'],
+      id: snapshot.id,
     );
   }
 

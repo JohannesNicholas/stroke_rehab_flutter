@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stroke_rehab/record.dart';
 
@@ -11,14 +12,47 @@ class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final startDate = record.start?.toDate() ?? DateTime(0);
+
+    var correctPresses = 0;
+    record.messages?.forEach((message) {
+      if (message.correctPress == true) {
+        correctPresses += 1;
+      }
+    });
+
+    final repetitions = (record.messages?.last.rep ?? 1) - 1;
+    final totalTime = (record.messages?.last.datetime
+                ?.toDate()
+                .difference(startDate)
+                .inMilliseconds ??
+            0) /
+        1000.0;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Text(record.title ?? "Untitled"),
-            Text(
-              startDate.toString().substring(0, 19),
-              style: TextStyle(fontSize: 15),
+            Hero(
+              tag: "record_title_${record.id}",
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  record.title ?? "Untitled",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            Hero(
+              tag: "record_time_${record.id}",
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  startDate.toString().substring(0, 19),
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
             )
           ],
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,11 +62,12 @@ class RecordPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
-            child: Center(child: Text("x repetitions in x.xxx seconds")),
+            child: Center(
+                child: Text("$repetitions repetitions in $totalTime seconds")),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
-            child: Center(child: Text("x correct presses")),
+            child: Center(child: Text("$correctPresses correct presses")),
           ),
           Expanded(
             child: ListView(
@@ -85,6 +120,7 @@ class RecordPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
+              heroTag: "camera_button",
               onPressed: () {
                 //TODO
               },
@@ -95,8 +131,35 @@ class RecordPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
+              heroTag: "delete_button",
               onPressed: () {
-                //TODO
+                showDialog(
+                  context: context,
+                  builder: (BuildContext alertContext) => AlertDialog(
+                    title: const Text('Delete Record Forever?'),
+                    content: const Text(
+                        'Permanently delete this recorded exercise?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(alertContext, 'Cancel'),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection("Records")
+                              .doc(record.id)
+                              .delete()
+                              .then((doc) {
+                            Navigator.pop(alertContext, 'OK');
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
               },
               child: const Icon(Icons.delete_forever),
               backgroundColor: Colors.orange,
@@ -105,6 +168,7 @@ class RecordPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton(
+              heroTag: "share_button",
               onPressed: () {
                 //TODO
               },
