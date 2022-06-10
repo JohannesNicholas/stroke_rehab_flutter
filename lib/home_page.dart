@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stroke_rehab/strings.dart';
 
+import 'normal_game.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({
     Key? key,
@@ -31,7 +33,12 @@ class HomePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: ((() {})),
+                          onPressed: ((() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NormalGame()));
+                          })),
                           child: Text(
                             Strings.normalGameTitle,
                             style: TextStyle(color: Colors.black),
