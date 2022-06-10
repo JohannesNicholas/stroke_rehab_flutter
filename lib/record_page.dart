@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -60,61 +62,67 @@ class RecordPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Center(
-                child: Text("$repetitions repetitions in $totalTime seconds")),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Center(child: Text("$correctPresses correct presses")),
-          ),
-          Expanded(
-            child: ListView(
-              children: record.messages!.map((RecordMessage message) {
-                final time = message.datetime?.toDate() ?? DateTime(0);
-                final timeDiff =
-                    time.difference(startDate).inMilliseconds / 1000.0;
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          message.message ?? "?",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Text(
-                        "+ " + timeDiff.toStringAsFixed(1) + " s",
-                        style: const TextStyle(
-                            color: Colors.orange,
-                            backgroundColor: Colors.black),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              (message.correctPress == null)
-                                  ? ""
-                                  : message.correctPress!
-                                      ? "✅"
-                                      : "❌",
+          Image.file(File(record.imagePath ?? "")),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Center(
+                    child:
+                        Text("$repetitions repetitions in $totalTime seconds")),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Center(child: Text("$correctPresses correct presses")),
+              ),
+              Expanded(
+                child: ListView(
+                  children: record.messages!.map((RecordMessage message) {
+                    final time = message.datetime?.toDate() ?? DateTime(0);
+                    final timeDiff =
+                        time.difference(startDate).inMilliseconds / 1000.0;
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              message.message ?? "?",
                               style: const TextStyle(fontSize: 18),
                             ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            "+ " + timeDiff.toStringAsFixed(1) + " s",
+                            style: const TextStyle(
+                                color: Colors.orange,
+                                backgroundColor: Colors.black),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  (message.correctPress == null)
+                                      ? ""
+                                      : message.correctPress!
+                                          ? "✅"
+                                          : "❌",
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       ),
-                    ],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  ),
-                );
-              }).toList(),
-            ),
-          )
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
+          ),
         ],
       ),
       floatingActionButton: Column(
@@ -123,8 +131,16 @@ class RecordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
               heroTag: "camera_button",
-              onPressed: () {
-                //TODO
+              onPressed: () async {
+                final image =
+                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                record.imagePath = image?.path;
+
+                FirebaseFirestore.instance
+                    .collection("Records")
+                    .doc(record.id)
+                    .set(record.toFirestore());
+                Navigator.pop(context);
               },
               child: const Icon(Icons.camera),
               backgroundColor: Colors.orange,

@@ -8,16 +8,17 @@ class Record {
   List<RecordMessage>? messages;
   bool? goals;
   String? id;
+  String? imagePath;
 
-  Record({
-    this.title,
-    this.start,
-    this.reps,
-    this.buttonsOrNotches,
-    this.messages,
-    this.goals,
-    this.id,
-  });
+  Record(
+      {this.title,
+      this.start,
+      this.reps,
+      this.buttonsOrNotches,
+      this.messages,
+      this.goals,
+      this.id,
+      this.imagePath});
 
   factory Record.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -42,6 +43,7 @@ class Record {
       messages: messagesAsRecords,
       goals: data?['goals'],
       id: snapshot.id,
+      imagePath: data?['imagePath'],
     );
   }
 
@@ -57,6 +59,7 @@ class Record {
       if (buttonsOrNotches != null) "buttonsOrNotches": buttonsOrNotches,
       if (messages != null) "messages": messagesAsMap,
       if (goals != null) "goals": goals,
+      if (imagePath != null) "imagePath": imagePath,
     };
   }
 }
