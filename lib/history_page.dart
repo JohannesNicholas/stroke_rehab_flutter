@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -126,77 +128,98 @@ class _HistoryPageState extends State<HistoryPage> {
                           final hourString = start.hour > 12
                               ? (start.hour - 12).toString() + 'PM'
                               : start.hour.toString() + "AM";
-                          return TextButton(
-                            style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                textStyle:
-                                    TextStyle(fontWeight: FontWeight.normal)),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          RecordPage(record: record)));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 16),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Hero(
-                                      tag: "record_title_${record.id}",
-                                      child: Material(
-                                        child: Text(
-                                          record.title ?? "Untitled",
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              backgroundColor:
-                                                  Colors.transparent),
+                          return Stack(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: 72,
+                                child: (record.imagePath ?? "") != ""
+                                    ? Image.file(
+                                        File(
+                                          record.imagePath ?? "",
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                  Hero(
-                                    tag: "record_time_${record.id}",
-                                    child: Material(
-                                      child: Text(
-                                        start.day.toString() +
-                                            " " +
-                                            months[start.month - 1] +
-                                            " " +
-                                            hourString,
-                                        style:
-                                            const TextStyle(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          record.reps
-                                                  .toString()
-                                                  .replaceAll("null", "∞") +
-                                              " x " +
-                                              record.buttonsOrNotches
-                                                  .toString()
-                                                  .replaceAll("null", "?"),
-                                          style: const TextStyle(fontSize: 18),
-                                        ),
-                                        const Icon(
-                                          Icons.chevron_right,
-                                          color: Colors.orange,
-                                          size: 32,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
                               ),
-                            ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.normal)),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RecordPage(record: record)));
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 8, 0, 16),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Hero(
+                                          tag: "record_title_${record.id}",
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: Text(
+                                              record.title ?? "Untitled",
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  backgroundColor:
+                                                      Colors.transparent),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Hero(
+                                        tag: "record_time_${record.id}",
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: Text(
+                                            start.day.toString() +
+                                                " " +
+                                                months[start.month - 1] +
+                                                " " +
+                                                hourString,
+                                            style: const TextStyle(
+                                                color: Colors.grey),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              record.reps
+                                                      .toString()
+                                                      .replaceAll("null", "∞") +
+                                                  " x " +
+                                                  record.buttonsOrNotches
+                                                      .toString()
+                                                      .replaceAll("null", "?"),
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                            ),
+                                            const Icon(
+                                              Icons.chevron_right,
+                                              color: Colors.orange,
+                                              size: 32,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         })
                         .toList()
