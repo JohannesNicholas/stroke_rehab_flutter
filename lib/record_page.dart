@@ -90,7 +90,16 @@ class RecordPage extends StatelessWidget {
                           Expanded(
                             child: Text(
                               message.message ?? "?",
-                              style: const TextStyle(fontSize: 18),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                shadows: <Shadow>[
+                                  Shadow(
+                                    offset: Offset(1, 1),
+                                    blurRadius: 5,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Text(
@@ -109,7 +118,16 @@ class RecordPage extends StatelessWidget {
                                       : message.correctPress!
                                           ? "✅"
                                           : "❌",
-                                  style: const TextStyle(fontSize: 18),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(1, 1),
+                                        blurRadius: 5,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

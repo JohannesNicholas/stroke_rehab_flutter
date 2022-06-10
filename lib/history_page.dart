@@ -167,9 +167,18 @@ class _HistoryPageState extends State<HistoryPage> {
                                             child: Text(
                                               record.title ?? "Untitled",
                                               style: const TextStyle(
-                                                  fontSize: 18,
-                                                  backgroundColor:
-                                                      Colors.transparent),
+                                                fontSize: 18,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(1, 1),
+                                                    blurRadius: 5,
+                                                    color: Color.fromARGB(
+                                                        255, 0, 0, 0),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -185,7 +194,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 " " +
                                                 hourString,
                                             style: const TextStyle(
-                                                color: Colors.grey),
+                                                color: Colors.orange,
+                                                backgroundColor: Colors.black),
                                           ),
                                         ),
                                       ),
@@ -202,8 +212,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   record.buttonsOrNotches
                                                       .toString()
                                                       .replaceAll("null", "?"),
-                                              style:
-                                                  const TextStyle(fontSize: 18),
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(1, 1),
+                                                    blurRadius: 5,
+                                                    color: Color.fromARGB(
+                                                        255, 0, 0, 0),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             const Icon(
                                               Icons.chevron_right,
