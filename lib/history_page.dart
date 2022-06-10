@@ -19,6 +19,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   var db = FirebaseFirestore.instance;
 
+  Iterable<QueryDocumentSnapshot<Object?>> recordDocuments = [];
   Map<String, bool> chipValues = {};
   @override
   Widget build(BuildContext context) {
@@ -98,9 +99,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   return const Text("Loading");
                 }
 
+                recordDocuments = snapshot.data!.docs.reversed;
+
                 return Expanded(
                   child: ListView(
-                    children: snapshot.data!.docs.reversed
+                    children: recordDocuments
                         .map((DocumentSnapshot document) {
                           final record = document.data() as Record;
                           final start = record.start?.toDate() ?? DateTime(0);
@@ -211,7 +214,32 @@ class _HistoryPageState extends State<HistoryPage> {
             child: FloatingActionButton(
               heroTag: "share_button",
               onPressed: () {
-                Share.share('check out my website https://example.com');
+                var csv =
+                    "title, start, end, repetition count, presses count\n";
+
+                for (var it in recordDocuments) {
+                  final record = it.data() as Record;
+                  final title = record.title ?? "Untitled";
+                  final start = it.id;
+                  final end = ((record.messages?.isNotEmpty ?? false)
+                          ? (record.messages?.last.datetime?.toDate() ??
+                              DateTime(0))
+                          : 0)
+                      .toString();
+                  final repC = (record.messages?.isNotEmpty ?? false)
+                      ? ((record.messages?.last.rep ?? 1) - 1).toString()
+                      : "?";
+                  var pressC = 0;
+
+                  record.messages?.forEach((message) {
+                    if (message.correctPress != null) {
+                      pressC += 1;
+                    }
+                  });
+
+                  csv += "$title, $start, $end, $repC, $pressC\n";
+                }
+                Share.share(csv);
               },
               child: const Icon(Icons.share),
               backgroundColor: Colors.orange,
