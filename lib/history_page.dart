@@ -256,38 +256,60 @@ class _HistoryPageState extends State<HistoryPage> {
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.all(32),
-            child: FloatingActionButton(
-              heroTag: "share_button",
-              onPressed: () {
-                var csv =
-                    "title, start, end, repetition count, presses count\n";
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton.small(
+                    heroTag: "camera_button",
+                    onPressed: () {},
+                    child: const Icon(Icons.camera),
+                    backgroundColor: Colors.orange,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton.small(
+                    heroTag: "delete_button",
+                    onPressed: () {},
+                    child: const Icon(Icons.delete_forever),
+                    backgroundColor: Colors.orange,
+                  ),
+                ),
+                FloatingActionButton(
+                  heroTag: "share_button",
+                  onPressed: () {
+                    var csv =
+                        "title, start, end, repetition count, presses count\n";
 
-                for (var it in recordDocuments) {
-                  final record = it.data() as Record;
-                  final title = record.title ?? "Untitled";
-                  final start = it.id;
-                  final end = ((record.messages?.isNotEmpty ?? false)
-                          ? (record.messages?.last.datetime?.toDate() ??
-                              DateTime(0))
-                          : 0)
-                      .toString();
-                  final repC = (record.messages?.isNotEmpty ?? false)
-                      ? ((record.messages?.last.rep ?? 1) - 1).toString()
-                      : "?";
-                  var pressC = 0;
+                    for (var it in recordDocuments) {
+                      final record = it.data() as Record;
+                      final title = record.title ?? "Untitled";
+                      final start = it.id;
+                      final end = ((record.messages?.isNotEmpty ?? false)
+                              ? (record.messages?.last.datetime?.toDate() ??
+                                  DateTime(0))
+                              : 0)
+                          .toString();
+                      final repC = (record.messages?.isNotEmpty ?? false)
+                          ? ((record.messages?.last.rep ?? 1) - 1).toString()
+                          : "?";
+                      var pressC = 0;
 
-                  record.messages?.forEach((message) {
-                    if (message.correctPress != null) {
-                      pressC += 1;
+                      record.messages?.forEach((message) {
+                        if (message.correctPress != null) {
+                          pressC += 1;
+                        }
+                      });
+
+                      csv += "$title, $start, $end, $repC, $pressC\n";
                     }
-                  });
-
-                  csv += "$title, $start, $end, $repC, $pressC\n";
-                }
-                Share.share(csv);
-              },
-              child: const Icon(Icons.share),
-              backgroundColor: Colors.orange,
+                    Share.share(csv);
+                  },
+                  child: const Icon(Icons.share),
+                  backgroundColor: Colors.orange,
+                ),
+              ],
             ),
           ),
         ),
