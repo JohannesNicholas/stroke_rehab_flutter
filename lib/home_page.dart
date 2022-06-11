@@ -3,9 +3,13 @@ import 'package:stroke_rehab/strings.dart';
 
 import 'normal_game.dart';
 
+typedef void IntCallback(int id);
+
 class HomePage extends StatelessWidget {
+  final IntCallback onSonChanged;
   const HomePage({
     Key? key,
+    required this.onSonChanged,
   }) : super(key: key);
 
   @override
@@ -86,7 +90,9 @@ class HomePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: ((() {})),
+                          onPressed: ((() {
+                            onSonChanged(1);
+                          })),
                           child: Text(
                             Strings.normalGameTitle,
                             style: TextStyle(color: Colors.black),

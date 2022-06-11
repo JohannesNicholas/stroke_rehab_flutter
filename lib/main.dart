@@ -53,11 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _currentIndex = 0;
 
-  final tabs = [
-    const HomePage(),
-    const HistoryPage(),
-    const SettingsPage(),
-  ];
+  void updateId(int newId) {
+    setState(() {
+      _currentIndex = newId;
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -72,6 +72,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final tabs = [
+      HomePage(
+        onSonChanged: (int newId) {
+          updateId(newId);
+        },
+      ),
+      const HistoryPage(),
+      const SettingsPage(),
+    ];
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
