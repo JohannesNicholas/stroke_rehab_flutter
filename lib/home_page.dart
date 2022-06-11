@@ -20,140 +20,154 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: SizedBox(
-              height: 180,
-              width: double.infinity,
-              child: Card(
-                child: Column(
-                  children: [
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('🏆 Exercise with Goals 🏆'),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: ((() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NormalGame(
-                                          onGameDone: onGameDone,
-                                          freePlay: false,
-                                        )));
-                          })),
-                          child: Text(
-                            Strings.normalGameTitle,
-                            style: TextStyle(color: Colors.black),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 32),
+                child: SizedBox(
+                  height: 180,
+                  width: double.infinity,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('🏆 Exercise with Goals 🏆'),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: ((() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SliderGame(
-                                          onGameDone: onGameDone,
-                                          freePlay: false,
-                                        )));
-                          })),
-                          child: Text(
-                            Strings.sliderGameTitle,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orange[300] ?? Colors.orange),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: ((() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NormalGame(
+                                              onGameDone: onGameDone,
+                                              freePlay: false,
+                                            )));
+                              })),
+                              child: const Text(
+                                Strings.normalGameTitle,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: ((() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SliderGame(
+                                              onGameDone: onGameDone,
+                                              freePlay: false,
+                                            )));
+                              })),
+                              child: const Text(
+                                Strings.sliderGameTitle,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.orange[300] ?? Colors.orange),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: SizedBox(
-              height: 180,
-              width: double.infinity,
-              child: Card(
-                child: Column(
-                  children: [
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('∞ Free-play ∞'),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: ((() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NormalGame(
-                                          onGameDone: onGameDone,
-                                          freePlay: true,
-                                        )));
-                          })),
-                          child: const Text(
-                            Strings.normalGameTitle,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orange[300] ?? Colors.orange),
+              Padding(
+                padding: const EdgeInsets.only(top: 32),
+                child: SizedBox(
+                  height: 180,
+                  width: double.infinity,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('∞ Free-play ∞'),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: ((() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SliderGame(
-                                          onGameDone: onGameDone,
-                                          freePlay: true,
-                                        )));
-                          })),
-                          child: Text(
-                            Strings.sliderGameTitle,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orange[300] ?? Colors.orange),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: ((() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NormalGame(
+                                              onGameDone: onGameDone,
+                                              freePlay: true,
+                                            )));
+                              })),
+                              child: const Text(
+                                Strings.normalGameTitle,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.orange[300] ?? Colors.orange),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: ((() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SliderGame(
+                                              onGameDone: onGameDone,
+                                              freePlay: true,
+                                            )));
+                              })),
+                              child: const Text(
+                                Strings.sliderGameTitle,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.orange[300] ?? Colors.orange),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.start,
           ),
+          const Center(
+            child: Text(
+              "By Johannes Nicholas",
+              style: TextStyle(color: Colors.grey),
+            ),
+          )
         ],
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
       ),
     ));
   }
