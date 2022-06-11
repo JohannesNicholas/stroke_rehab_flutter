@@ -157,104 +157,142 @@ class RecordPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
-              heroTag: "camera_button",
-              onPressed: () async {
-                final image =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
-                record.imagePath = image?.path;
+      floatingActionButton: SizedBox(
+        height: 300,
+        width: 300,
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: 53,
+              right: 53,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton.small(
+                  heroTag: "camera_button",
+                  onPressed: () async {
+                    final image = await ImagePicker()
+                        .pickImage(source: ImageSource.camera);
+                    record.imagePath = image?.path;
 
-                FirebaseFirestore.instance
-                    .collection("Records")
-                    .doc(record.id)
-                    .set(record.toFirestore());
-                Navigator.pop(context);
-              },
-              child: const Icon(Icons.camera),
-              backgroundColor: Colors.orange,
+                    FirebaseFirestore.instance
+                        .collection("Records")
+                        .doc(record.id)
+                        .set(record.toFirestore());
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(Icons.camera),
+                  backgroundColor: Colors.orange,
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
-              heroTag: "delete_button",
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection("totals")
-                    .doc("totals")
-                    .get()
-                    .then((snapshot) {
-                  final totalButtonPresses =
-                      snapshot.data()?["correctButtonPresses"] as int?;
+            Positioned(
+              right: 0,
+              bottom: 75,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton.small(
+                  heroTag: "gallery_button",
+                  onPressed: () async {
+                    final image = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    record.imagePath = image?.path;
 
-                  if (totalButtonPresses != null) {
+                    FirebaseFirestore.instance
+                        .collection("Records")
+                        .doc(record.id)
+                        .set(record.toFirestore());
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(Icons.photo),
+                  backgroundColor: Colors.orange,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 75,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton.small(
+                  heroTag: "delete_button",
+                  onPressed: () {
                     FirebaseFirestore.instance
                         .collection("totals")
                         .doc("totals")
-                        .update({
-                      "correctButtonPresses":
-                          (totalButtonPresses - correctPresses)
-                    });
-                  }
-                });
+                        .get()
+                        .then((snapshot) {
+                      final totalButtonPresses =
+                          snapshot.data()?["correctButtonPresses"] as int?;
 
-                showDialog(
-                  context: context,
-                  builder: (BuildContext alertContext) => AlertDialog(
-                    title: const Text('Delete Record Forever?'),
-                    content: const Text(
-                        'Permanently delete this recorded exercise?'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(alertContext, 'Cancel'),
-                        child: const Text('Cancel'),
+                      if (totalButtonPresses != null) {
+                        FirebaseFirestore.instance
+                            .collection("totals")
+                            .doc("totals")
+                            .update({
+                          "correctButtonPresses":
+                              (totalButtonPresses - correctPresses)
+                        });
+                      }
+                    });
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext alertContext) => AlertDialog(
+                        title: const Text('Delete Record Forever?'),
+                        content: const Text(
+                            'Permanently delete this recorded exercise?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.pop(alertContext, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection("Records")
+                                  .doc(record.id)
+                                  .delete()
+                                  .then((doc) {
+                                Navigator.pop(alertContext, 'OK');
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection("Records")
-                              .doc(record.id)
-                              .delete()
-                              .then((doc) {
-                            Navigator.pop(alertContext, 'OK');
-                            Navigator.pop(context);
-                          });
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: const Icon(Icons.delete_forever),
-              backgroundColor: Colors.orange,
+                    );
+                  },
+                  child: const Icon(Icons.delete_forever),
+                  backgroundColor: Colors.orange,
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              heroTag: "share_button",
-              onPressed: () {
-                var csv = "message, date and time, correct press\n";
-                record.messages?.forEach((m) {
-                  final message = m.message;
-                  final timestamp = m.datetime?.toDate().toString();
-                  final correctButton = m.correctPress.toString();
-                  csv += "$message, $timestamp, $correctButton\n";
-                });
-                Share.share(csv);
-              },
-              child: const Icon(Icons.share),
-              backgroundColor: Colors.orange,
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  heroTag: "share_button",
+                  onPressed: () {
+                    var csv = "message, date and time, correct press\n";
+                    record.messages?.forEach((m) {
+                      final message = m.message;
+                      final timestamp = m.datetime?.toDate().toString();
+                      final correctButton = m.correctPress.toString();
+                      csv += "$message, $timestamp, $correctButton\n";
+                    });
+                    Share.share(csv);
+                  },
+                  child: const Icon(Icons.share),
+                  backgroundColor: Colors.orange,
+                ),
+              ),
             ),
-          ),
-        ],
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
+          ],
+        ),
       ),
     );
   }
