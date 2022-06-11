@@ -28,11 +28,9 @@ class appear extends State<SliderGame> {
 
   Random random = Random();
   final db = FirebaseFirestore.instance;
-  var numberOfButtons = 5;
+  var numberOfNotches = 5;
   var numberOfRounds = 5;
   var randomOrder = true;
-  var highlightNextButton = true;
-  var buttonSize = 4;
   var freePlay = false;
   late Record recordData;
   var nextNumber = 1;
@@ -108,7 +106,7 @@ class appear extends State<SliderGame> {
                             child: Padding(
                               padding: const EdgeInsets.all(24),
                               child: LinearProgressIndicator(
-                                value: 2.0 / 5,
+                                value: 2.0 / (numberOfNotches + 1),
                                 minHeight: 30,
                                 color: Colors.orange[300],
                               ),
@@ -122,8 +120,8 @@ class appear extends State<SliderGame> {
                                 });
                               },
                               min: 0,
-                              max: 5,
-                              divisions: 5,
+                              max: numberOfNotches + 1,
+                              divisions: numberOfNotches + 1,
                               value: sliderValue.toDouble(),
                             ),
                           )
@@ -136,23 +134,6 @@ class appear extends State<SliderGame> {
             );
           }),
     );
-  }
-
-  //puts the highlighted button at the bottom of the stack, as to appear
-  //at the top of the view, without anything else overlapping.
-  List<NormalGameButtonData> getOrderedListOfButtons() {
-    var newButtons = buttons.toList();
-    newButtons.sort((a, b) {
-      if (a.number == nextNumber) {
-        return 1;
-      }
-      if (b.number == nextNumber) {
-        return -1;
-      }
-      return 0;
-    });
-
-    return newButtons;
   }
 
   //called at the start of a game
@@ -177,7 +158,7 @@ class appear extends State<SliderGame> {
       title: Strings.sliderGameTitle,
       messages: [],
       reps: (!freePlay) ? numberOfRounds : null,
-      buttonsOrNotches: numberOfButtons,
+      buttonsOrNotches: numberOfNotches,
       start: Timestamp.now(),
       goals: !freePlay,
       id: DateTime.now()
@@ -198,30 +179,22 @@ class appear extends State<SliderGame> {
     final settingsMap = settingsSnapshot.data();
 
     numberOfRounds =
-        int.tryParse(settingsMap?[Strings.normalRepsSettingsKey]) ?? 0;
-    timeLimit = int.tryParse(settingsMap?[Strings.normalTimeSettingsKey]) ?? 0;
+        int.tryParse(settingsMap?[Strings.sliderRepsSettingsKey]) ?? 0;
+    timeLimit = int.tryParse(settingsMap?[Strings.sliderTimeSettingsKey]) ?? 0;
     if (freePlay) {
       timeLimit = 0;
     }
-    numberOfButtons =
-        int.tryParse(settingsMap?[Strings.normalNumButtonsSettingsKey]) ?? 3;
-    randomOrder = settingsMap?[Strings.normalRandomSettingsKey] != false;
-    highlightNextButton =
-        settingsMap?[Strings.normalHighlightNextSettingsKey] != false;
-    buttonSize = {
-          'S': 50,
-          'M': 70,
-          'L': 100,
-          'XL': 200
-        }[settingsMap?[Strings.normalSizeSettingsKey] ?? 'M'] ??
-        70;
+    numberOfNotches =
+        int.tryParse(settingsMap?[Strings.sliderNotchesSettingsKey]) ?? 3;
+    randomOrder = settingsMap?[Strings.sliderRandomSettingsKey] != false;
   }
 
   //when a stroke rehab button is pressed
   void buttonPressed(int button) {
+    //TODO change this
     record("$button Pressed", button == nextNumber);
     if (button == nextNumber) {
-      if (button == numberOfButtons) {
+      if (button == numberOfNotches) {
         newRound();
       } else {
         nextNumber += 1;
@@ -258,8 +231,9 @@ class appear extends State<SliderGame> {
 
   //moves and resets all the buttons.
   void resetButtons() {
+    //TODO replace this
     buttons = [];
-    for (var i = 0; i < numberOfButtons; i++) {
+    for (var i = 0; i < numberOfNotches; i++) {
       buttons.add(NormalGameButtonData(
           1 + (randomOrder ? random.nextInt(98) : i * 19),
           1 + (randomOrder ? random.nextInt(98) : i * 19),
