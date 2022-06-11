@@ -172,7 +172,7 @@ class appear extends State<NormalGame> {
       timer = Timer.periodic(Duration(seconds: 1), (t) {
         setState(() {
           time--;
-          if (time < 0) {
+          if (time <= 0) {
             endOfGame(timeout: true);
           }
         });

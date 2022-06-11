@@ -24,17 +24,15 @@ class SliderGame extends StatefulWidget {
 }
 
 class appear extends State<SliderGame> {
-  List<NormalGameButtonData> buttons = [];
-
   Random random = Random();
   final db = FirebaseFirestore.instance;
   var numberOfNotches = 5;
   var numberOfRounds = 5;
   var randomOrder = true;
   var freePlay = false;
-  late Record recordData;
-  var nextNumber = 1;
-  var round = 1;
+  Record? recordData;
+  var nextNotch = 1;
+  var round = 0;
   var timeLimit = 0;
   var time = 1;
   Timer? timer;
@@ -46,7 +44,7 @@ class appear extends State<SliderGame> {
   @override
   Widget build(BuildContext context) {
     //if start of game,
-    if (buttons.isEmpty) {
+    if (recordData == null) {
       startFuture = startOfGame();
     }
 
@@ -106,7 +104,8 @@ class appear extends State<SliderGame> {
                             child: Padding(
                               padding: const EdgeInsets.all(24),
                               child: LinearProgressIndicator(
-                                value: 2.0 / (numberOfNotches + 1),
+                                value: nextNotch.toDouble() /
+                                    (numberOfNotches + 1),
                                 minHeight: 30,
                                 color: Colors.orange[300],
                               ),
@@ -118,6 +117,9 @@ class appear extends State<SliderGame> {
                                 setState(() {
                                   sliderValue = newValue.toInt();
                                 });
+                              },
+                              onChangeEnd: (newValue) {
+                                sliderChanged(newValue.toInt());
                               },
                               min: 0,
                               max: numberOfNotches + 1,
@@ -140,14 +142,12 @@ class appear extends State<SliderGame> {
   Future<bool?> startOfGame() async {
     await loadSettings();
 
-    resetButtons();
-
     if (timeLimit != 0) {
       time = timeLimit;
       timer = Timer.periodic(Duration(seconds: 1), (t) {
         setState(() {
           time--;
-          if (time < 0) {
+          if (time <= 0) {
             endOfGame(timeout: true);
           }
         });
@@ -166,6 +166,8 @@ class appear extends State<SliderGame> {
           .replaceAll('T', ' ')
           .substring(0, 19),
     );
+
+    newRound();
 
     return true;
   }
@@ -190,15 +192,11 @@ class appear extends State<SliderGame> {
   }
 
   //when a stroke rehab button is pressed
-  void buttonPressed(int button) {
+  void sliderChanged(int notch) {
     //TODO change this
-    record("$button Pressed", button == nextNumber);
-    if (button == nextNumber) {
-      if (button == numberOfNotches) {
-        newRound();
-      } else {
-        nextNumber += 1;
-      }
+    record("$notch Pressed", notch == nextNotch);
+    if (notch == nextNotch) {
+      newRound();
     }
 
     setState(() {});
@@ -214,7 +212,7 @@ class appear extends State<SliderGame> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => RecordPage(record: recordData)));
+            builder: (context) => RecordPage(record: recordData!)));
   }
 
   //when the last button in a round is pressed, this resets the board.
@@ -225,21 +223,15 @@ class appear extends State<SliderGame> {
       record("Round $round", null);
     }
 
-    resetButtons();
-    round++;
-  }
+    sliderValue = 0;
+    nextNotch = numberOfNotches;
 
-  //moves and resets all the buttons.
-  void resetButtons() {
-    //TODO replace this
-    buttons = [];
-    for (var i = 0; i < numberOfNotches; i++) {
-      buttons.add(NormalGameButtonData(
-          1 + (randomOrder ? random.nextInt(98) : i * 19),
-          1 + (randomOrder ? random.nextInt(98) : i * 19),
-          i + 1));
+    if (randomOrder) {
+      sliderValue = random.nextInt(2) * (numberOfNotches + 1);
+      nextNotch = 1 + random.nextInt(numberOfNotches);
     }
-    nextNumber = 1;
+
+    round++;
   }
 
   @override
@@ -249,13 +241,13 @@ class appear extends State<SliderGame> {
   }
 
   void record(String message, bool? correctPress) {
-    recordData.messages?.add(RecordMessage(
+    recordData?.messages?.add(RecordMessage(
         datetime: Timestamp.now(),
         message: message,
         correctPress: correctPress,
         rep: round));
 
-    db.collection("Records").doc(recordData.id).set(recordData.toFirestore());
+    db.collection("Records").doc(recordData?.id).set(recordData!.toFirestore());
 
     //increment the total correct presses counter
     if (correctPress == true) {
