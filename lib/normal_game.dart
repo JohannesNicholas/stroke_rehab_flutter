@@ -12,9 +12,11 @@ typedef void IntCallback();
 
 class NormalGame extends StatefulWidget {
   final IntCallback onGameDone;
+  final bool freePlay;
   const NormalGame({
     Key? key,
     required this.onGameDone,
+    required this.freePlay,
   }) : super(key: key);
 
   @override
@@ -32,7 +34,6 @@ class appear extends State<NormalGame> {
   var highlightNextButton = true;
   var buttonSize = 4;
   var freePlay = false;
-  String documentID = "";
   late Record recordData;
   var nextNumber = 1;
   var round = 1;
@@ -57,12 +58,15 @@ class appear extends State<NormalGame> {
           future: startFuture,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("loading settings"),
-                  CircularProgressIndicator()
-                ],
+              return Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("loading settings"),
+                    CircularProgressIndicator()
+                  ],
+                ),
               );
             }
             return Column(
@@ -88,7 +92,7 @@ class appear extends State<NormalGame> {
                       )
                     : const SizedBox.shrink(),
                 Text(
-                  "$round/$numberOfRounds",
+                  "$round/${numberOfRounds == 0 || freePlay ? '∞' : numberOfRounds}",
                   style: const TextStyle(fontSize: 64),
                 ),
                 Expanded(
@@ -117,7 +121,8 @@ class appear extends State<NormalGame> {
                                         buttonPressed(button.number);
                                       }),
                                       backgroundColor:
-                                          button.number == nextNumber
+                                          (button.number == nextNumber) ||
+                                                  !highlightNextButton
                                               ? Colors.orange
                                               : Colors.orange[300],
                                     ),
@@ -160,9 +165,6 @@ class appear extends State<NormalGame> {
   Future<bool?> startOfGame() async {
     await loadSettings();
 
-    documentID =
-        DateTime.now().toIso8601String().replaceAll('T', ' ').substring(0, 19);
-
     resetButtons();
 
     if (timeLimit != 0) {
@@ -178,18 +180,25 @@ class appear extends State<NormalGame> {
     }
 
     recordData = Record(
-        title: Strings.normalGameTitle,
-        messages: [],
-        reps: (!freePlay) ? numberOfRounds : null,
-        buttonsOrNotches: numberOfButtons,
-        start: Timestamp.now(),
-        goals: !freePlay);
+      title: Strings.normalGameTitle,
+      messages: [],
+      reps: (!freePlay) ? numberOfRounds : null,
+      buttonsOrNotches: numberOfButtons,
+      start: Timestamp.now(),
+      goals: !freePlay,
+      id: DateTime.now()
+          .toIso8601String()
+          .replaceAll('T', ' ')
+          .substring(0, 19),
+    );
 
     return true;
   }
 
   //loads the settings from firestore database
   Future<void> loadSettings() async {
+    freePlay = widget.freePlay;
+
     final settingsSnapshot =
         await db.collection("settings").doc("settings").get();
     final settingsMap = settingsSnapshot.data();
@@ -197,11 +206,14 @@ class appear extends State<NormalGame> {
     numberOfRounds =
         int.tryParse(settingsMap?[Strings.normalRepsSettingsKey]) ?? 0;
     timeLimit = int.tryParse(settingsMap?[Strings.normalTimeSettingsKey]) ?? 0;
+    if (freePlay) {
+      timeLimit = 0;
+    }
     numberOfButtons =
         int.tryParse(settingsMap?[Strings.normalNumButtonsSettingsKey]) ?? 3;
     randomOrder = settingsMap?[Strings.normalRandomSettingsKey] != false;
     highlightNextButton =
-        settingsMap?[Strings.normalRandomSettingsKey] != false;
+        settingsMap?[Strings.normalHighlightNextSettingsKey] != false;
     buttonSize = {
           'S': 50,
           'M': 70,
@@ -226,6 +238,10 @@ class appear extends State<NormalGame> {
   }
 
   void endOfGame({bool timeout = false}) {
+    final message = !timeout ? "🏆 COMPLETE! 🏆" : "⏱️ TIME OUT! ⏱️";
+
+    record(message, null);
+
     widget.onGameDone();
     Navigator.pop(context);
     Navigator.push(
@@ -236,8 +252,10 @@ class appear extends State<NormalGame> {
 
   //when the last button in a round is pressed, this resets the board.
   void newRound() {
-    if (round >= numberOfRounds) {
+    if (round >= numberOfRounds && numberOfRounds != 0 && !freePlay) {
       endOfGame();
+    } else {
+      record("Round $round", null);
     }
 
     resetButtons();
@@ -249,7 +267,9 @@ class appear extends State<NormalGame> {
     buttons = [];
     for (var i = 0; i < numberOfButtons; i++) {
       buttons.add(NormalGameButtonData(
-          1 + random.nextInt(98), 1 + random.nextInt(98), i + 1));
+          1 + (randomOrder ? random.nextInt(98) : i * 19),
+          1 + (randomOrder ? random.nextInt(98) : i * 19),
+          i + 1));
     }
     nextNumber = 1;
   }
@@ -267,9 +287,8 @@ class appear extends State<NormalGame> {
         correctPress: correctPress,
         rep: round));
 
-    db.collection("Records").doc(documentID).set(recordData.toFirestore());
+    db.collection("Records").doc(recordData.id).set(recordData.toFirestore());
 
-    //TODO: decrement total correct presses counter on history page.
     //increment the total correct presses counter
     if (correctPress == true) {
       db.collection("totals").doc("totals").get().then((snapshot) {

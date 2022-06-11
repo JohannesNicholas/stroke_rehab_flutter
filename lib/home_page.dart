@@ -43,6 +43,7 @@ class HomePage extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => NormalGame(
                                           onGameDone: onGameDone,
+                                          freePlay: false,
                                         )));
                           })),
                           child: Text(
@@ -93,7 +94,13 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           onPressed: ((() {
-                            onGameDone();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NormalGame(
+                                          onGameDone: onGameDone,
+                                          freePlay: true,
+                                        )));
                           })),
                           child: Text(
                             Strings.normalGameTitle,
