@@ -8,8 +8,14 @@ import 'package:stroke_rehab/record.dart';
 import 'package:stroke_rehab/record_page.dart';
 import 'package:stroke_rehab/strings.dart';
 
+typedef void IntCallback();
+
 class NormalGame extends StatefulWidget {
-  const NormalGame({Key? key}) : super(key: key);
+  final IntCallback onGameDone;
+  const NormalGame({
+    Key? key,
+    required this.onGameDone,
+  }) : super(key: key);
 
   @override
   State<NormalGame> createState() => appear();
@@ -220,6 +226,7 @@ class appear extends State<NormalGame> {
   }
 
   void endOfGame({bool timeout = false}) {
+    widget.onGameDone();
     Navigator.pop(context);
     Navigator.push(
         context,

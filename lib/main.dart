@@ -53,20 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _currentIndex = 0;
 
-  void updateId(int newId) {
+//when a game is complete, move to the history page.
+  void gameDone() {
     setState(() {
-      _currentIndex = newId;
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _currentIndex = 1;
     });
   }
 
@@ -74,8 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final tabs = [
       HomePage(
-        onSonChanged: (int newId) {
-          updateId(newId);
+        onGameDone: () {
+          gameDone();
         },
       ),
       const HistoryPage(),

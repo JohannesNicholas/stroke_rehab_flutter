@@ -3,13 +3,13 @@ import 'package:stroke_rehab/strings.dart';
 
 import 'normal_game.dart';
 
-typedef void IntCallback(int id);
+typedef void IntCallback();
 
 class HomePage extends StatelessWidget {
-  final IntCallback onSonChanged;
+  final IntCallback onGameDone;
   const HomePage({
     Key? key,
-    required this.onSonChanged,
+    required this.onGameDone,
   }) : super(key: key);
 
   @override
@@ -41,7 +41,9 @@ class HomePage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => NormalGame()));
+                                    builder: (context) => NormalGame(
+                                          onGameDone: onGameDone,
+                                        )));
                           })),
                           child: Text(
                             Strings.normalGameTitle,
@@ -91,7 +93,7 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           onPressed: ((() {
-                            onSonChanged(1);
+                            onGameDone();
                           })),
                           child: Text(
                             Strings.normalGameTitle,
