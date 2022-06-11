@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stroke_rehab/slider_game.dart';
 import 'package:stroke_rehab/strings.dart';
 
 import 'normal_game.dart';
@@ -57,7 +58,15 @@ class HomePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: ((() {})),
+                          onPressed: ((() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SliderGame(
+                                          onGameDone: onGameDone,
+                                          freePlay: false,
+                                        )));
+                          })),
                           child: Text(
                             Strings.sliderGameTitle,
                             style: TextStyle(color: Colors.black),
@@ -117,7 +126,15 @@ class HomePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: ((() {})),
+                          onPressed: ((() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SliderGame(
+                                          onGameDone: onGameDone,
+                                          freePlay: true,
+                                        )));
+                          })),
                           child: Text(
                             Strings.sliderGameTitle,
                             style: TextStyle(color: Colors.black),
