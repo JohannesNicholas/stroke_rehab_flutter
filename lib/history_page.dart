@@ -270,6 +270,15 @@ class _HistoryPageState extends State<HistoryPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FloatingActionButton.small(
+                    heroTag: "gallery_button",
+                    onPressed: () {},
+                    child: const Icon(Icons.photo),
+                    backgroundColor: Colors.orange,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton.small(
                     heroTag: "delete_button",
                     onPressed: () {},
                     child: const Icon(Icons.delete_forever),
