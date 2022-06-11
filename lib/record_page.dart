@@ -183,6 +183,25 @@ class RecordPage extends StatelessWidget {
             child: FloatingActionButton.small(
               heroTag: "delete_button",
               onPressed: () {
+                FirebaseFirestore.instance
+                    .collection("totals")
+                    .doc("totals")
+                    .get()
+                    .then((snapshot) {
+                  final totalButtonPresses =
+                      snapshot.data()?["correctButtonPresses"] as int?;
+
+                  if (totalButtonPresses != null) {
+                    FirebaseFirestore.instance
+                        .collection("totals")
+                        .doc("totals")
+                        .update({
+                      "correctButtonPresses":
+                          (totalButtonPresses - correctPresses)
+                    });
+                  }
+                });
+
                 showDialog(
                   context: context,
                   builder: (BuildContext alertContext) => AlertDialog(

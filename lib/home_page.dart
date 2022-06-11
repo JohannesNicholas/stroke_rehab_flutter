@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                                           freePlay: true,
                                         )));
                           })),
-                          child: Text(
+                          child: const Text(
                             Strings.normalGameTitle,
                             style: TextStyle(color: Colors.black),
                           ),
